@@ -29,3 +29,9 @@ The keyboard combination you need to hold to record.
 ### TYPING_SPEED_INTERVAL = 0.025
 
 The delay between characters when the transcribed text is being output, making this too small can result in missing characters. 0.025 is the sweet spot in my testing.
+
+
+
+## Credits
+Simran for the feather icon
+https://pictogrammers.com/library/mdi/icon/feather
