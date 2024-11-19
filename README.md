@@ -14,6 +14,9 @@ Install dependancies (list to come)
 run main.py
 
 ## Config.ini
+
+Created in users app data by main.py on first run, settings GUI allows easy modification of the below options in the ini file.
+
 ### WHISPER_API_KEY =
 
 **Required** you need an OpenAI API account and available credit
@@ -22,7 +25,7 @@ run main.py
 
 Status windows when recording and transcribing is displayed in the center of the main monitor, this value changes how far from the bottom of the screen the window is.
 
-### KEYBOARD_SHORTCUT = crtl+shift+alt
+### KEYBOARD_SHORTCUT = ctrl+shift+alt
 
 The keyboard combination you need to hold to record.
 
