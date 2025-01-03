@@ -1,4 +1,4 @@
-# OpenAI Whisper Voice-to-Text Dictation
+# Voice-to-Text Dictation using OpenAI Whisper
 
 Voice-to-text dictation app for Windows using OpenAI's Whisper API. 
 
