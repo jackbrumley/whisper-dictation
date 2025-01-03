@@ -35,6 +35,13 @@ def type_text(text, output_mode, typing_speed):
   else:
     pyautogui.typewrite(text, interval=typing_speed)
 
+def show_message(title, message):
+  # Displays a Tkinter message box with the given title and message.
+  root = tk.Tk()
+  root.withdraw()  # Hide the root window
+  tk.messagebox.showinfo(title, message)
+  root.destroy()
+
 def main():
   # Main function to initialize and run the application.
   global running, restart, input_ready
@@ -54,23 +61,45 @@ def main():
           config[key] = value
   except FileNotFoundError:
     # Create a default config file if it doesn't exist
-    print("Config file not found. Creating a default config file at:", config_path)
-    default_config = {
-      "WHISPER_API_KEY": "your_api_key_here",
-      "PIXELS_FROM_BOTTOM": "80",
-      "KEYBOARD_SHORTCUT": "ctrl+shift+alt",
-      "TYPING_SPEED_INTERVAL": "0.025",
-      "OUTPUT_MODE": "instant"
-    }
+    message = (
+      f"Config file not found. A default config file has been created at:\n{config_path}\n\n"
+      "Please update it with your API key before running the script again."
+    )
+    print(message)
+    if not sys.stdin.isatty():
+      show_message("Configuration Required", message)
+    else:
+      input("Press Enter to exit...")  # Wait for user input before closing
     with open(config_path, 'w') as config_file:
-      for key, value in default_config.items():
-        config_file.write(f"{key}={value}\n")
-    print("Default config file created. Please update it with your API key.")
+      config_file.write("# API Configuration\n")
+      config_file.write("WHISPER_API_KEY=your_api_key_here\n\n")
+      config_file.write("# Window settings\n")
+      config_file.write("PIXELS_FROM_BOTTOM=80\n\n")
+      config_file.write("# Shortcut configuration\n")
+      config_file.write("KEYBOARD_SHORTCUT=ctrl+shift+alt\n\n")
+      config_file.write("# Typing speed\n")
+      config_file.write("TYPING_SPEED_INTERVAL=0.025\n\n")
+      config_file.write("# Output mode (typed or instant)\n")
+      config_file.write("OUTPUT_MODE=instant\n")
     sys.exit(1)
 
   # API and configuration parameters
   WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions"
   WHISPER_API_KEY = config.get('WHISPER_API_KEY', 'your_api_key_here')
+
+  # Check for a placeholder API key and warn the user
+  if WHISPER_API_KEY == 'your_api_key_here':
+    message = (
+      f"The API key in the configuration file is set to the default placeholder.\n"
+      f"Please update it with your OpenAI API key to use the application.\n\n"
+      f"Configuration file location: {config_path}"
+    )
+    print(message)
+    if not sys.stdin.isatty():
+      show_message("API Key Required", message)
+    else:
+      input("Press Enter to exit...")
+    sys.exit(1)
 
   PIXELS_FROM_BOTTOM = int(config.get('PIXELS_FROM_BOTTOM', 100))
   KEYBOARD_SHORTCUT = config.get('KEYBOARD_SHORTCUT', 'ctrl+shift+alt')
