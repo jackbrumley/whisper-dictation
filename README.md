@@ -36,7 +36,7 @@ The taskbar icon includes an "Edit Config" option for easy modification of the b
 
 **Required**: You need an OpenAI API account and available credit.
 
-### PIXELS_FROM_BOTTOM = 100
+### PIXELS_FROM_BOTTOM = 80
 
 The status windows for recording and transcribing are displayed in the center of the main monitor. This value adjusts how far from the bottom of the screen the window is positioned.
 
