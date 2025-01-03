@@ -25,8 +25,8 @@ This application runs in your system tray, waiting for a trigger keypress (CTRL+
 ## Prerequisites:
 
 1. **Windows** 
-   - While this application may work on other oparating systems, it has only been tested on Windows 10/11. It was originally intended to replace Windows 
-   - More info in on Microsoft Voice Typing  [here](https://support.microsoft.com/en-au/windows/use-voice-typing-to-talk-instead-of-type-on-your-pc-fec94565-c4bd-329d-e59a-af033fa5689f).
+   - While this application may work on other oparating systems, it has only been tested on Windows 10/11. It was originally intended to replace Windows Voice Typing.
+   - 'More info in on Microsoft Voice Typing  [here](https://support.microsoft.com/en-au/windows/use-voice-typing-to-talk-instead-of-type-on-your-pc-fec94565-c4bd-329d-e59a-af033fa5689f).
 2. **Python**
    - Download and install Python from the [official Python website](https://www.python.org/downloads/). Make sure to add Python to your system's PATH during installation.
    - Verify that Python is installed by running the following command in your terminal or command prompt: 
@@ -38,16 +38,16 @@ This application runs in your system tray, waiting for a trigger keypress (CTRL+
 
 ## Download and Run
 
-### Download Zip File
+### Download
 To download the latest version of the application, click [here](https://github.com/jackbrumley/whisper-dictation/archive/refs/heads/main.zip) to download a ZIP file of the repository.
 
 1. Extract the contents of the ZIP file to a folder on your computer.
 2. Navigate to the extracted folder and double-click `main.py`.
 
 
-### Or  Clone Repository
+### Or  Clone
 
-Alternatively if you have git installed you can you can clone the respository:
+Alternatively if you have git installed you can you can clone the respository, browse to the directory and run it from the command line.
 ```
 cd c:\Temp
 git clone https://github.com/jackbrumley/whisper-dictation
@@ -76,26 +76,20 @@ Path:
 
 Below are the options available in the configuration file:
 
-- **WHISPER_API_KEY**  
-  **Required**: Your OpenAI API key (you must replace the placeholder key).
-
-- **PIXELS_FROM_BOTTOM**  
-  Adjusts how far the status windows are positioned from the bottom of the screen (default: `80`).
-
-- **KEYBOARD_SHORTCUT**  
-  The keyboard combination used to start recording (default: `ctrl+shift+alt`).
-
-- **TYPING_SPEED_INTERVAL**  
+- **WHISPER_API_KEY:** Your OpenAI API key (you must replace the placeholder key).
+- **PIXELS_FROM_BOTTOM:** Adjusts how far the status windows are positioned from the bottom of the screen (default: `80`).
+- **KEYBOARD_SHORTCUT:** The keyboard combination used to start recording (default: `ctrl+shift+alt`).
+- **TYPING_SPEED_INTERVAL:**  
   The delay (in seconds) between each character when outputting transcribed text in "typed" mode. Adjust as needed for performance.
-
-- **OUTPUT_MODE**  
-  Determines how the text is output:  
+- **OUTPUT_MODE:** Determines how the text is output:  
   - `typed`: Simulates typing by outputting characters one at a time.  
   - `instant`: Outputs the text using a much faster typing simulation. **Note:** When set to "instant," the application outputs a message in the console: "Future functionality"
 
-## Setting Up Your OpenAI API Key
+## Open API Key
 
-To use this application, you need a valid OpenAI account to create an API key. Additionally, you must have credit on your OpenAI account. While the cost of usage is generally inexpensive, you need to ensure your account has sufficient credit for the API requests.
+To use this application, you need a valid OpenAI account to create an API key. Additionally, you must have credit on your OpenAI account. The cost of usage is very inexpensive ($5 USD will last you weeks), you need to ensure your account has sufficient credit for the API requests.
+
+### Getting Your OpenAI API Key
 
 1. Visit the [OpenAI API page](https://platform.openai.com/signup/) to create an account if you don’t already have one.
 2. Once your account is created, log in to the [OpenAI Dashboard](https://platform.openai.com/account/api-keys).
@@ -113,6 +107,7 @@ To use this application, you need a valid OpenAI account to create an API key. A
 
 - Make sure your API key is valid and has sufficient credit.
 - This application works best in environments with a stable microphone setup.
+- Often best used for inputting prompts via voice into ChatGPT for quick iteration and refinement.
 
 ## Credits
 
