@@ -21,44 +21,41 @@ This application runs in your system tray, waiting for a trigger keypress (CTRL+
 - **Status Window**: Displays recording and transcription progress with adjustable positioning.
 - **Tray Icon Menu**: Edit configuration and exit the app easily from the system tray.
 
-## Installation
 
-### Prerequisite: Install Python
+## Prerequisites:
 
-1. Download and install Python from the [official Python website](https://www.python.org/downloads/). Make sure to add Python to your system's PATH during installation.
-2. Verify that Python is installed by running the following command in your terminal or command prompt:
+1. **Windows** 
+   - While this application may work on other oparating systems, it has only been tested on Windows 10/11. It was originally intended to replace Windows 
+   - More info in on Microsoft Voice Typing  [here](https://support.microsoft.com/en-au/windows/use-voice-typing-to-talk-instead-of-type-on-your-pc-fec94565-c4bd-329d-e59a-af033fa5689f).
+2. **Python**
+   - Download and install Python from the [official Python website](https://www.python.org/downloads/). Make sure to add Python to your system's PATH during installation.
+   - Verify that Python is installed by running the following command in your terminal or command prompt: 
+   `python --version`
+3. **Python Packages**
+   - To install the required Python packages, run the following command:
+   **Note:** If you encounter any permissions issues, you may need to run this command as an administrator.
+   - `pip install pyaudio keyboard requests pyautogui screeninfo pillow pystray`
 
-```bash
-python --version
-```
+## Download and Run
 
-### Install Required Packages
-
-To install the required Python packages, run the following command:
-
-**Note:** If you encounter any permissions issues, you may need to run this command as an administrator.
-
-```bash
-pip install pyaudio keyboard requests pyautogui screeninfo pillow pystray
-```
-
-## Downloading the Application
-
+### Download Zip File
 To download the latest version of the application, click [here](https://github.com/jackbrumley/whisper-dictation/archive/refs/heads/main.zip) to download a ZIP file of the repository.
 
 1. Extract the contents of the ZIP file to a folder on your computer.
-2. Navigate to the extracted folder and run the script (or double-click `main.py`).
-
-## Running the Application
+2. Navigate to the extracted folder and double-click `main.py`.
 
 
-To run the script, double-click the `main.py` file to launch the application or use the following command:
+### Or  Clone Repository
 
-```bash
+Alternatively if you have git installed you can you can clone the respository:
+```
+cd c:\Temp
+git clone https://github.com/jackbrumley/whisper-dictation
+cd c:\Temp\whisper-dictation
 python main.py
 ```
 
-## Creating a Startup Shortcut
+## Run at Startup
 
 If you would like the application to automatically start when you log in:
 
