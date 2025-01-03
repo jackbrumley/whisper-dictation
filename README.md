@@ -89,7 +89,7 @@ Below are the options available in the configuration file:
   The keyboard combination used to start recording (default: `ctrl+shift+alt`).
 
 - **TYPING_SPEED_INTERVAL**  
-  The delay (in seconds) between each character when outputting transcribed text in "typed" mode. Adjust as needed for performance (default: `0.025`).
+  The delay (in seconds) between each character when outputting transcribed text in "typed" mode. Adjust as needed for performance.
 
 - **OUTPUT_MODE**  
   Determines how the text is output:  
