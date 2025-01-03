@@ -48,22 +48,11 @@ To download the latest version of the application, click [here](https://github.c
 ### Or  Clone
 
 Alternatively if you have git installed you can you can clone the respository, browse to the directory and run it from the command line.
-```
-cd c:\Temp
-git clone https://github.com/jackbrumley/whisper-dictation
-cd c:\Temp\whisper-dictation
-python main.py
-```
-
-## Run at Startup
-
-If you would like the application to automatically start when you log in:
-
-1. Right-click on `main.py` and select **Create Shortcut**.
-2. Press `Win + R` to open the Run dialog.
-3. Type `shell:startup` and press Enter to open the Startup folder.
-4. Move the shortcut you created into the Startup folder.
-5. The application will now launch automatically when you log in.
+- `mkdir c:\Temp`
+- `cd c:\Temp`
+- `git clone https://github.com/jackbrumley/whisper-dictation`
+- `cd c:\Temp\whisper-dictation`
+- `python main.py`
 
 ## Configuration File
 
@@ -76,14 +65,14 @@ Path:
 
 Below are the options available in the configuration file:
 
-- **WHISPER_API_KEY:** Your OpenAI API key (you must replace the placeholder key).
-- **PIXELS_FROM_BOTTOM:** Adjusts how far the status windows are positioned from the bottom of the screen (default: `80`).
-- **KEYBOARD_SHORTCUT:** The keyboard combination used to start recording (default: `ctrl+shift+alt`).
-- **TYPING_SPEED_INTERVAL:**  
-  The delay (in seconds) between each character when outputting transcribed text in "typed" mode. Adjust as needed for performance.
-- **OUTPUT_MODE:** Determines how the text is output:  
-  - `typed`: Simulates typing by outputting characters one at a time.  
-  - `instant`: Outputs the text using a much faster typing simulation. **Note:** When set to "instant," the application outputs a message in the console: "Future functionality"
+- `WHISPER_API_KEY` Your OpenAI API key (you must replace the placeholder key).
+- `PIXELS_FROM_BOTTOM` Adjusts how far the status windows are positioned from the bottom of the screen (default: `80`).
+- `KEYBOARD_SHORTCUT` The keyboard combination used to start recording (default: `ctrl+shift+alt`).
+- `TYPING_SPEED_INTERVAL` The delay (in seconds) between each character when outputting transcribed text in "typed" mode. Adjust as needed for performance.
+- `OUTPUT_MODE` Determines how the text is output:  
+  - `typed` Simulates typing by outputting characters one at a time.  
+  - `instant` Outputs the text using a much faster typing simulation. 
+  **Note:** When set to "instant," the application outputs a message in the console: "Future functionality"
 
 ## Open API Key
 
@@ -102,6 +91,16 @@ To use this application, you need a valid OpenAI account to create an API key. A
 1. In your OpenAI Dashboard, navigate to the Billing section.
 2. Add a payment method or pre-purchase credits to ensure your API requests are processed.
 3. Check your account usage and remaining credits regularly to avoid interruptions.
+
+## Run at Startup
+
+If you would like the application to automatically start when you log in:
+
+1. Right-click on `main.py` and select **Create Shortcut**.
+2. Press `Win + R` to open the Run dialog.
+3. Type `shell:startup` and press Enter to open the Startup folder.
+4. Move the shortcut you created into the Startup folder.
+5. The application will now launch automatically when you log in.
 
 ## Notes
 
