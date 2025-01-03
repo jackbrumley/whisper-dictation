@@ -16,7 +16,7 @@ This application runs in your system tray, waiting for a trigger keypress (CTRL+
 
 ## Features
 
-- **Configurable Output Modes**: Choose between "typed" (character-by-character simulation) or "instant" (a much faster typing simulation). Note: The "instant" mode does not currently use copy-paste functionality but aims to emulate it by significantly speeding up typing. A future update may include true copy-paste functionality.
+- **Configurable Output Modes**: Choose between "typed" (character-by-character simulation) or "instant" (essentailly copy/paste). Note: The "instant" mode is not currently implimented.
 - **Custom Shortcut Key**: Allows you to configure the key combination for triggering the dictation process.
 - **Status Window**: Displays recording and transcription progress with adjustable positioning.
 - **Tray Icon Menu**: Edit configuration and exit the app easily from the system tray.
@@ -51,13 +51,12 @@ To download the latest version of the application, click [here](https://github.c
 
 ## Running the Application
 
-To run the script, use the following command:
+
+To run the script, double-click the `main.py` file to launch the application or use the following command:
 
 ```bash
 python main.py
 ```
-
-Alternatively, you can double-click the `main.py` file to launch the application.
 
 ## Creating a Startup Shortcut
 
@@ -95,7 +94,7 @@ Below are the options available in the configuration file:
 - **OUTPUT_MODE**  
   Determines how the text is output:  
   - `typed`: Simulates typing by outputting characters one at a time.  
-  - `instant`: Outputs the text using a much faster typing simulation. **Note:** When set to "instant," the application outputs a message in the console: "Future functionality coming soon. Recommend reducing the time between key presses." This mode does not use true copy-paste yet.
+  - `instant`: Outputs the text using a much faster typing simulation. **Note:** When set to "instant," the application outputs a message in the console: "Future functionality"
 
 ## Setting Up Your OpenAI API Key
 
