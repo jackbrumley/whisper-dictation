@@ -1,40 +1,66 @@
 # Whisper-Dictation
-Voice to text dictation app for Windows using OpenAI's Whisper API
+Voice-to-text dictation app for Windows using OpenAI's Whisper API
 
 **You need an OpenAI API key for this to work!**
 
 98% written with the help of AI
 
-A simple app that runs in your tray waiting for a trigger keypress (CTRL+SHIFT+ALT by default), using your default microphone it records your voice until you release the trigger keys, it will then be sent to OpenAI's Whisper model and the text is sent back and typed out wherever your cursor is active.
+A simple app that runs in your tray waiting for a trigger keypress (CTRL+SHIFT+ALT by default). Using your default microphone, it records your voice until you release the trigger keys. The recording is then sent to OpenAI's Whisper model, and the transcribed text is typed out wherever your cursor is active.
 
-## To run
+## Installation
 
-Install dependancies (list to come)
+To install the required Python packages, run the following command:
 
-run main.py
+```bash
+pip install pyaudio keyboard requests pyautogui screeninfo pillow pystray
+```
+
+## Running the Script
+
+To run the script, use the following command:
+
+```bash
+python main.py
+```
 
 ## Config.ini
 
-Created in users app data by main.py on first run, settings GUI allows easy modification of the below options in the ini file.
+The configuration file is created in the user's AppData directory by `main.py` on the first run.
+
+Path:
+`C:\Users\<user>\AppData\Local\WhisperDictation\config.ini`
+
+The taskbar icon includes an "Edit Config" option for easy modification of the below settings in the `config.ini` file.
 
 ### WHISPER_API_KEY =
 
-**Required** you need an OpenAI API account and available credit
+**Required**: You need an OpenAI API account and available credit.
 
 ### PIXELS_FROM_BOTTOM = 100
 
-Status windows when recording and transcribing is displayed in the center of the main monitor, this value changes how far from the bottom of the screen the window is.
+The status windows for recording and transcribing are displayed in the center of the main monitor. This value adjusts how far from the bottom of the screen the window is positioned.
 
 ### KEYBOARD_SHORTCUT = ctrl+shift+alt
 
-The keyboard combination you need to hold to record.
+The keyboard combination you need to hold to start recording.
 
 ### TYPING_SPEED_INTERVAL = 0.025
 
-The delay between characters when the transcribed text is being output, making this too small can result in missing characters. 0.025 is the sweet spot in my testing.
+The delay between characters when the transcribed text is being output. Making this value too small can result in missing characters. 0.025 is the sweet spot in testing.
 
+### OUTPUT_MODE = typed
 
+Determines how the text is output:
+- `typed`: Simulates typing by outputting characters one at a time.
+- `instant`: Outputs the entire transcription instantly, as if pasted.
 
 ## Credits
-Simran for the feather icon
-https://pictogrammers.com/library/mdi/icon/feather
+
+Originally forked from:
+https://github.com/Snuffypot11/Whisper-Dictation
+
+With the following improvements:
+- Added instant text output mode.
+- Improved configuration management via taskbar menu.
+- Enhanced debugging and error handling.
+
