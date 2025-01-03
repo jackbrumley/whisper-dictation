@@ -20,7 +20,7 @@ input_ready = True
 
 # Load configuration path
 local_appdata = os.getenv('LOCALAPPDATA')
-config_path = os.path.join(local_appdata, 'WhisperDictation', 'config.ini')
+config_path = os.path.join(local_appdata, 'whisper-dictation', 'config.ini')
 config_dir = os.path.dirname(config_path)
 if not os.path.exists(config_dir):
   os.makedirs(config_dir)
@@ -131,7 +131,7 @@ def main():
   CHANNELS = 1
   RATE = 16000
   CHUNK = 1024
-  WAVE_OUTPUT_FILENAME = os.path.join(local_appdata, 'WhisperDictation', 'temp_audio.wav')
+  WAVE_OUTPUT_FILENAME = os.path.join(local_appdata, 'whisper-dictation', 'temp_audio.wav')
 
   def exit_app(icon, item):
     # Gracefully exits the application.
@@ -262,7 +262,7 @@ def main():
       item('Edit Config', open_config_editor),
       item('Quit', exit_app),
     )
-    icon = pystray.Icon("WhisperDictation", image, "Whisper Dictation", menu)
+    icon = pystray.Icon("whisper-dictation", image, "Whisper Dictation", menu)
     dictation_thread.start()
     icon.run()
 

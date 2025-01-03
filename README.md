@@ -59,7 +59,7 @@ Alternatively if you have git installed you can you can clone the respository, b
 The configuration file (`config.ini`) is created in the user's AppData directory on the first run of the script. You can also edit the configuration directly through the "Edit Config" option in the system tray menu.
 
 Path:
-`C:\Users\<user>\AppData\Local\WhisperDictation\config.ini`
+`C:\Users\<user>\AppData\Local\whisper-dictation\config.ini`
 
 ### Configuration Options
 
