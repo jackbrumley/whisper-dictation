@@ -87,7 +87,7 @@ def main():
       config_file.write("# Shortcut configuration\n")
       config_file.write("KEYBOARD_SHORTCUT=ctrl+shift+alt\n\n")
       config_file.write("# Typing speed\n")
-      config_file.write("TYPING_SPEED_INTERVAL=0.01\n\n")
+      config_file.write("TYPING_SPEED_INTERVAL=0.001\n\n")
       config_file.write("# Output mode (typed or instant)\n")
       config_file.write("OUTPUT_MODE=typed\n")
     sys.exit(1)
