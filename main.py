@@ -31,7 +31,16 @@ ICON_PATH = "assets/icon.ico"
 def type_text(text, output_mode, typing_speed):
   # Handles typing text instantly or character by character.
   if output_mode.lower() == 'instant':
-    pyautogui.write(text)
+    message = (
+      "[Future Functionality] Instant mode is not implemented yet.\n"
+      "Please update your config file to set OUTPUT_MODE to 'typed' instead."
+    )
+    print(message)
+    if not sys.stdin.isatty():
+      show_message("Configuration Update Required", message)
+    else:
+      input("Press Enter to exit...")
+    sys.exit(1)
   else:
     pyautogui.typewrite(text, interval=typing_speed)
 
@@ -78,9 +87,9 @@ def main():
       config_file.write("# Shortcut configuration\n")
       config_file.write("KEYBOARD_SHORTCUT=ctrl+shift+alt\n\n")
       config_file.write("# Typing speed\n")
-      config_file.write("TYPING_SPEED_INTERVAL=0.025\n\n")
+      config_file.write("TYPING_SPEED_INTERVAL=0.01\n\n")
       config_file.write("# Output mode (typed or instant)\n")
-      config_file.write("OUTPUT_MODE=instant\n")
+      config_file.write("OUTPUT_MODE=typed\n")
     sys.exit(1)
 
   # API and configuration parameters
@@ -90,9 +99,8 @@ def main():
   # Check for a placeholder API key and warn the user
   if WHISPER_API_KEY == 'your_api_key_here':
     message = (
-      f"The API key in the configuration file is set to the default placeholder.\n"
-      f"Please update it with your OpenAI API key to use the application.\n\n"
-      f"Configuration file location: {config_path}"
+      "The API key in the configuration file is set to the default placeholder.\n"
+      "Please update it with your OpenAI API key to use the application."
     )
     print(message)
     if not sys.stdin.isatty():
@@ -101,10 +109,23 @@ def main():
       input("Press Enter to exit...")
     sys.exit(1)
 
+  # Check for invalid OUTPUT_MODE
+  OUTPUT_MODE = config.get('OUTPUT_MODE', 'typed')
+  if OUTPUT_MODE.lower() == 'instant':
+    message = (
+      "[Future Functionality] Instant mode is not implemented yet.\n"
+      "Please update your config file to set OUTPUT_MODE to 'typed' instead."
+    )
+    print(message)
+    if not sys.stdin.isatty():
+      show_message("Configuration Update Required", message)
+    else:
+      input("Press Enter to exit...")
+    sys.exit(1)
+
   PIXELS_FROM_BOTTOM = int(config.get('PIXELS_FROM_BOTTOM', 100))
   KEYBOARD_SHORTCUT = config.get('KEYBOARD_SHORTCUT', 'ctrl+shift+alt')
-  TYPING_SPEED_INTERVAL = float(config.get('TYPING_SPEED_INTERVAL', 0.025))
-  OUTPUT_MODE = config.get('OUTPUT_MODE', 'instant')
+  TYPING_SPEED_INTERVAL = float(config.get('TYPING_SPEED_INTERVAL', 0.01))  # Updated default to match "instant" speed
 
   FORMAT = pyaudio.paInt16
   CHANNELS = 1
