@@ -117,11 +117,4 @@ If you would like the application to automatically start when you log in:
 Originally forked from:  
 https://github.com/Snuffypot11/Whisper-Dictation
 
-With the following improvements:
-
-- Added instant text output mode.
-- Improved configuration management via taskbar menu.
-- Enhanced debugging and error handling.
-- Added a dynamic positioning system for status windows.
-- Included user-friendly alerts for missing API keys or configurations.
 
