@@ -1,6 +1,8 @@
 # Voice-to-Text Dictation using OpenAI Whisper
 
-Voice-to-text dictation app for Windows using OpenAI's Whisper API. 
+Voice-to-text dictation app for Windows using OpenAI's Whisper API.
+
+![alt text](/assets/icon256x256.png)
 
 I found that the built-in Windows 10/11 Voice Typing tool was decent but often struggled with accuracy. I wanted something better—something that could type using my voice in any text box across my system. It needed to be simple, affordable, and reliable. While commercial tools like Dragon Naturally Speaking are excellent, they can be prohibitively expensive.
 

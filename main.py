@@ -28,6 +28,9 @@ if not os.path.exists(config_dir):
 # Custom icon path for the system tray
 ICON_PATH = "assets/icon.ico"
 
+# Whisper API URL (set globally)
+WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions"
+
 def type_text(text, output_mode, typing_speed):
   # Handles typing text instantly or character by character.
   if output_mode.lower() == 'instant':
@@ -36,20 +39,36 @@ def type_text(text, output_mode, typing_speed):
       "Please update your config file to set OUTPUT_MODE to 'typed' instead."
     )
     print(message)
-    if not sys.stdin.isatty():
-      show_message("Configuration Update Required", message)
-    else:
-      input("Press Enter to exit...")
+    input("Press Enter to exit...")
     sys.exit(1)
   else:
     pyautogui.typewrite(text, interval=typing_speed)
 
-def show_message(title, message):
-  # Displays a Tkinter message box with the given title and message.
-  root = tk.Tk()
-  root.withdraw()  # Hide the root window
-  tk.messagebox.showinfo(title, message)
-  root.destroy()
+def handle_exit_with_message(message):
+  # Handles showing a message and waiting for user input before exiting
+  print(message)
+  input("Press Enter to exit...")
+  sys.exit(1)
+
+def setup_tray_icon():
+  # Sets up the system tray icon and menu.
+  def open_config_editor(icon, item):
+    print("Opening configuration editor...")
+    os.system(f'notepad.exe "{config_path}"')
+
+  def exit_app(icon, item):
+    # Gracefully exits the application.
+    global running
+    running = False
+    icon.stop()
+
+  image = Image.open(ICON_PATH) if os.path.exists(ICON_PATH) else None
+  menu = (
+    item('Edit Config', open_config_editor),
+    item('Quit', exit_app),
+  )
+  icon = pystray.Icon("whisper-dictation", image, "Whisper Dictation", menu)
+  threading.Thread(target=icon.run, daemon=True).start()
 
 def main():
   # Main function to initialize and run the application.
@@ -58,8 +77,14 @@ def main():
   running = True
   restart = False
 
+  # Set up the system tray icon early
+  setup_tray_icon()
+
+  print("Tray icon initialized.")
+
   # Read or create configuration file
   config = {}
+  config_created = False
 
   try:
     with open(config_path, 'r') as config_file:
@@ -70,15 +95,6 @@ def main():
           config[key] = value
   except FileNotFoundError:
     # Create a default config file if it doesn't exist
-    message = (
-      f"Config file not found. A default config file has been created at:\n{config_path}\n\n"
-      "Please update it with your API key before running the script again."
-    )
-    print(message)
-    if not sys.stdin.isatty():
-      show_message("Configuration Required", message)
-    else:
-      input("Press Enter to exit...")  # Wait for user input before closing
     with open(config_path, 'w') as config_file:
       config_file.write("# API Configuration\n")
       config_file.write("WHISPER_API_KEY=your_api_key_here\n\n")
@@ -90,24 +106,26 @@ def main():
       config_file.write("TYPING_SPEED_INTERVAL=0.001\n\n")
       config_file.write("# Output mode (typed or instant)\n")
       config_file.write("OUTPUT_MODE=typed\n")
-    sys.exit(1)
+    config_created = True
 
-  # API and configuration parameters
-  WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions"
-  WHISPER_API_KEY = config.get('WHISPER_API_KEY', 'your_api_key_here')
+  print("Configuration file processed.")
 
   # Check for a placeholder API key and warn the user
+  WHISPER_API_KEY = config.get('WHISPER_API_KEY', 'your_api_key_here')
+  if config_created:
+    message = (
+      f"Config file not found. A default config file has been created at:\n{config_path}\n\n"
+      "Please update it with your API key before running the script again."
+    )
+    handle_exit_with_message(message)
+
   if WHISPER_API_KEY == 'your_api_key_here':
     message = (
-      "The API key in the configuration file is set to the default placeholder.\n"
-      "Please update it with your OpenAI API key to use the application."
+      f"The API key in the configuration file is set to the default placeholder.\n"
+      f"Please update it with your OpenAI API key to use the application.\n\n"
+      f"Configuration file location: {config_path}"
     )
-    print(message)
-    if not sys.stdin.isatty():
-      show_message("API Key Required", message)
-    else:
-      input("Press Enter to exit...")
-    sys.exit(1)
+    handle_exit_with_message(message)
 
   # Check for invalid OUTPUT_MODE
   OUTPUT_MODE = config.get('OUTPUT_MODE', 'typed')
@@ -116,16 +134,11 @@ def main():
       "[Future Functionality] Instant mode is not implemented yet.\n"
       "Please update your config file to set OUTPUT_MODE to 'typed' instead."
     )
-    print(message)
-    if not sys.stdin.isatty():
-      show_message("Configuration Update Required", message)
-    else:
-      input("Press Enter to exit...")
-    sys.exit(1)
+    handle_exit_with_message(message)
 
   PIXELS_FROM_BOTTOM = int(config.get('PIXELS_FROM_BOTTOM', 100))
   KEYBOARD_SHORTCUT = config.get('KEYBOARD_SHORTCUT', 'ctrl+shift+alt')
-  TYPING_SPEED_INTERVAL = float(config.get('TYPING_SPEED_INTERVAL', 0.01))  # Updated default to match "instant" speed
+  TYPING_SPEED_INTERVAL = float(config.get('TYPING_SPEED_INTERVAL', 0.01))
 
   FORMAT = pyaudio.paInt16
   CHANNELS = 1
@@ -133,11 +146,7 @@ def main():
   CHUNK = 1024
   WAVE_OUTPUT_FILENAME = os.path.join(local_appdata, 'whisper-dictation', 'temp_audio.wav')
 
-  def exit_app(icon, item):
-    # Gracefully exits the application.
-    global running
-    running = False
-    icon.stop()
+  print("Starting dictation thread.")
 
   def record_audio():
     # Records audio and saves it to a temporary file.
@@ -171,27 +180,22 @@ def main():
         headers = {"Authorization": f"Bearer {WHISPER_API_KEY}"}
         files = {'file': (WAVE_OUTPUT_FILENAME, audio_file, 'audio/wav')}
         data = {'model': 'whisper-1'}
-        print(f"Sending request to Whisper API with headers: {headers}, data: {data}")
         response = requests.post(WHISPER_API_URL, headers=headers, files=files, data=data)
-        print(f"Response Status Code: {response.status_code}")
-        print(f"Response Text: {response.text}")
         response.raise_for_status()
         text = response.json().get("text", "")
-        print(f"Transcription result: {text}")
         return text
     except Exception as e:
       print(f"Error during transcription: {e}")
       return "[Error in transcription]"
     finally:
       if os.path.exists(WAVE_OUTPUT_FILENAME):
-        print("Removing temporary audio file.")
         os.remove(WAVE_OUTPUT_FILENAME)
 
   def show_status_window(status):
     # Displays a temporary status window above the taskbar.
     monitors = screeninfo.get_monitors()
     main_monitor = next((m for m in monitors if m.is_primary), monitors[0])
-    
+
     screen_width = main_monitor.width
     screen_height = main_monitor.height
 
@@ -250,23 +254,7 @@ def main():
 
   dictation_thread = threading.Thread(target=dictation_process)
   dictation_thread.daemon = True
-
-  def setup_tray_icon():
-    # Sets up the system tray icon and menu.
-    def open_config_editor(icon, item):
-      print("Opening configuration editor...")
-      os.system(f'notepad.exe "{config_path}"')
-
-    image = Image.open(ICON_PATH) if os.path.exists(ICON_PATH) else None
-    menu = (
-      item('Edit Config', open_config_editor),
-      item('Quit', exit_app),
-    )
-    icon = pystray.Icon("whisper-dictation", image, "Whisper Dictation", menu)
-    dictation_thread.start()
-    icon.run()
-
-  setup_tray_icon()
+  dictation_thread.start()
 
   try:
     while running:
