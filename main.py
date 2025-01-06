@@ -73,7 +73,6 @@ def handle_exit_with_message(message):
 def setup_tray_icon():
   # Sets up the system tray icon and menu.
   def open_config_editor(icon, item):
-    print("Opening configuration editor...")
     os.system(f'notepad.exe "{config_path}"')
 
   def view_github(icon, item):
@@ -145,14 +144,14 @@ def main():
   if config_created:
     message = (
       f"Config file not found. A default config file has been created at:\n{config_path}\n\n"
-      "Please update it with your API key before running the script again."
+      "Right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application."
     )
     handle_exit_with_message(message)
 
   if WHISPER_API_KEY == 'your_api_key_here':
     message = (
       f"The API key in the configuration file is set to the default placeholder.\n"
-      f"Please update it with your OpenAI API key to use the application.\n\n"
+      f"Please right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application.\n\n"
       f"Configuration file location: {config_path}"
     )
     handle_exit_with_message(message)
