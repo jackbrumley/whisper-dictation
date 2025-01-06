@@ -36,7 +36,7 @@ ICON_PATH = "assets/icon.ico"
 WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions"
 
 # Repository version file URL
-REPO_VERSION_FILE_URL = "https://raw.githubusercontent.com/jackbrumley/whisper-dictation/main/version?nocache=1"
+REPO_VERSION_FILE_URL = "https://raw.githubusercontent.com/jackbrumley/whisper-dictation/main/version"
 # GitHub repository URL
 GITHUB_REPO_URL = "https://github.com/jackbrumley/whisper-dictation"
 
