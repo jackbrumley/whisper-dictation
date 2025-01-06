@@ -16,9 +16,11 @@ import webbrowser
 
 KEYBOARD_SHORTCUT = "ctrl+shift+alt"  # Default value; overridden by config later
 # Global variables for application state
-running = True
-restart = False
-input_ready = True
+state = {
+  'running': True,
+  'restart': False,
+  'input_ready': True
+}
 
 # Load configuration path
 local_appdata = os.getenv('LOCALAPPDATA')
@@ -61,18 +63,6 @@ def check_for_updates():
   except requests.RequestException as e:
     print(f"Failed to check for updates: {e}")
 
-def type_text(text, output_mode, typing_speed):
-  # Handles typing text instantly or character by character.
-  if output_mode.lower() == 'instant':
-    message = (
-      "[Future Functionality] Instant mode is not implemented yet.\n"
-      "Please update your config file to set OUTPUT_MODE to 'typed' instead."
-    )
-    print(message)
-    input("Press Enter to exit...")
-    sys.exit(1)
-  else:
-    pyautogui.typewrite(text, interval=typing_speed)
 
 def handle_exit_with_message(message):
   # Handles showing a message and waiting for user input before exiting
@@ -107,6 +97,10 @@ def setup_tray_icon():
   icon = pystray.Icon("whisper-dictation", image, "Whisper Dictation", menu)
   threading.Thread(target=icon.run, daemon=True).start()
 
+def type_text(text, typing_speed):
+  # Simulates typing text character by character
+  pyautogui.typewrite(text, interval=typing_speed)
+
 def main():
   # Main function to initialize and run the application.
   global running, restart, input_ready
@@ -124,7 +118,9 @@ def main():
 
   # Read or create configuration file
   config = {}
+  default_config_path = "assets/default_config.ini"
   config_created = False
+
 
   try:
     with open(config_path, 'r') as config_file:
@@ -134,19 +130,13 @@ def main():
           key, value = map(str.strip, line.split('=', 1))
           config[key] = value
   except FileNotFoundError:
-    # Create a default config file if it doesn't exist
-    with open(config_path, 'w') as config_file:
-      config_file.write("# API Configuration\n")
-      config_file.write("WHISPER_API_KEY=your_api_key_here\n\n")
-      config_file.write("# Window settings\n")
-      config_file.write("PIXELS_FROM_BOTTOM=80\n\n")
-      config_file.write("# Shortcut configuration\n")
-      config_file.write("KEYBOARD_SHORTCUT=ctrl+shift+alt\n\n")
-      config_file.write("# Typing speed\n")
-      config_file.write("TYPING_SPEED_INTERVAL=0.001\n\n")
-      config_file.write("# Output mode (typed or instant)\n")
-      config_file.write("OUTPUT_MODE=typed\n")
-    config_created = True
+    if os.path.exists(default_config_path):
+      with open(default_config_path, 'r') as default_config_file, open(config_path, 'w') as new_config_file:
+        new_config_file.write(default_config_file.read())
+      config_created = True
+    else:
+      print(f"Default configuration file not found at: {default_config_path}")
+      sys.exit(1)
 
   print("Configuration file processed.")
 
@@ -167,15 +157,7 @@ def main():
     )
     handle_exit_with_message(message)
 
-  # Check for invalid OUTPUT_MODE
-  OUTPUT_MODE = config.get('OUTPUT_MODE', 'typed')
-  if OUTPUT_MODE.lower() == 'instant':
-    message = (
-      "[Future Functionality] Instant mode is not implemented yet.\n"
-      "Please update your config file to set OUTPUT_MODE to 'typed' instead."
-    )
-    handle_exit_with_message(message)
-
+  
   PIXELS_FROM_BOTTOM = int(config.get('PIXELS_FROM_BOTTOM', 100))
   KEYBOARD_SHORTCUT = config.get('KEYBOARD_SHORTCUT', 'ctrl+shift+alt')
   TYPING_SPEED_INTERVAL = float(config.get('TYPING_SPEED_INTERVAL', 0.01))
@@ -254,7 +236,7 @@ def main():
     if os.path.exists(ICON_PATH):
       window.iconbitmap(ICON_PATH)
 
-    label = tk.Label(window, text=status, font=("Helvetica", 16), bg="white")
+    label = tk.Label(window, text=status, font=("Segoe UI", 16), bg="white")
     label.pack(expand=True, fill=tk.BOTH)
 
     window.update_idletasks()
@@ -262,14 +244,13 @@ def main():
 
   def dictation_process():
     # Monitors the shortcut key and handles dictation.
-    global input_ready
-    while running:
-      if input_ready:
+    while state['running']:
+      if state['input_ready']:
         print(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording...")
-        input_ready = False
+        state['input_ready'] = False
       if keyboard.is_pressed(KEYBOARD_SHORTCUT):
         print("Shortcut detected, starting dictation process...")
-        input_ready = False
+        state['input_ready'] = False
         window = show_status_window("Recording...")
         record_audio()
 
@@ -286,11 +267,12 @@ def main():
 
         if transcription:
           print("Typing transcription...")
-          type_text(transcription, OUTPUT_MODE, TYPING_SPEED_INTERVAL)
+          type_text(transcription, TYPING_SPEED_INTERVAL)
 
-        input_ready = True
+        state['input_ready'] = True
       else:
         time.sleep(0.1)
+      time.sleep(0.1)
 
   dictation_thread = threading.Thread(target=dictation_process)
   dictation_thread.daemon = True
