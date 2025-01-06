@@ -78,7 +78,7 @@ def setup_tray_icon():
   def view_github(icon, item):
     global KEYBOARD_SHORTCUT
     print("Opening GitHub repository...")
-    print(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording...")
+    print(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording... (You can minimise this window)")
     webbrowser.open(GITHUB_REPO_URL)
 
   def exit_app(icon, item):
@@ -245,7 +245,7 @@ def main():
     # Monitors the shortcut key and handles dictation.
     while state['running']:
       if state['input_ready']:
-        print(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording...")
+        print(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording... (You can minimise this window)")
         state['input_ready'] = False
       if keyboard.is_pressed(KEYBOARD_SHORTCUT):
         print("Shortcut detected, starting dictation process...")
