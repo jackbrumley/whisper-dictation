@@ -14,6 +14,7 @@ from pystray import MenuItem as item
 import sys
 import webbrowser
 
+KEYBOARD_SHORTCUT = "ctrl+shift+alt"  # Default value; overridden by config later
 # Global variables for application state
 running = True
 restart = False
@@ -34,6 +35,8 @@ WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions"
 
 # Repository version file URL
 REPO_VERSION_FILE_URL = "https://raw.githubusercontent.com/jackbrumley/whisper-dictation/main/version"
+# GitHub repository URL
+GITHUB_REPO_URL = "https://github.com/jackbrumley/whisper-dictation"
 
 def check_for_updates():
   # Check the local and repository version files
@@ -84,8 +87,10 @@ def setup_tray_icon():
     os.system(f'notepad.exe "{config_path}"')
 
   def view_github(icon, item):
+    global KEYBOARD_SHORTCUT
     print("Opening GitHub repository...")
-    webbrowser.open(REPO_VERSION_FILE_URL.replace('/version', ''))
+    print(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording...")
+    webbrowser.open(GITHUB_REPO_URL)
 
   def exit_app(icon, item):
     # Gracefully exits the application.
