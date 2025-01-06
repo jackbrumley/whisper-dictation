@@ -12,6 +12,7 @@ from PIL import Image
 import pystray
 from pystray import MenuItem as item
 import sys
+import webbrowser
 
 # Global variables for application state
 running = True
@@ -30,6 +31,32 @@ ICON_PATH = "assets/icon.ico"
 
 # Whisper API URL (set globally)
 WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions"
+
+# Repository version file URL
+REPO_VERSION_FILE_URL = "https://raw.githubusercontent.com/username/whisper-dictation/main/version"
+
+def check_for_updates():
+  # Check the local and repository version files
+  local_version_file = "version"
+
+  try:
+    # Read the local version
+    with open(local_version_file, 'r') as file:
+      local_version = file.read().strip()
+
+    # Fetch the online version
+    response = requests.get(REPO_VERSION_FILE_URL, timeout=5)
+    response.raise_for_status()
+    latest_version = response.text.strip()
+
+    if latest_version != local_version:
+      print(f"A new version is available: {latest_version}. You are using {local_version}.")
+    else:
+      print(f"You are using the latest version: {local_version}.")
+  except FileNotFoundError:
+    print("Local version file not found. Please ensure the 'version' file is included.")
+  except requests.RequestException as e:
+    print(f"Failed to check for updates: {e}")
 
 def type_text(text, output_mode, typing_speed):
   # Handles typing text instantly or character by character.
@@ -56,6 +83,10 @@ def setup_tray_icon():
     print("Opening configuration editor...")
     os.system(f'notepad.exe "{config_path}"')
 
+  def view_github(icon, item):
+    print("Opening GitHub repository...")
+    webbrowser.open(REPO_VERSION_FILE_URL.replace('/version', ''))
+
   def exit_app(icon, item):
     # Gracefully exits the application.
     global running
@@ -65,6 +96,7 @@ def setup_tray_icon():
   image = Image.open(ICON_PATH) if os.path.exists(ICON_PATH) else None
   menu = (
     item('Edit Config', open_config_editor),
+    item('View GitHub', view_github),
     item('Quit', exit_app),
   )
   icon = pystray.Icon("whisper-dictation", image, "Whisper Dictation", menu)
@@ -76,6 +108,9 @@ def main():
 
   running = True
   restart = False
+
+  # Check for updates at launch
+  check_for_updates()
 
   # Set up the system tray icon early
   setup_tray_icon()
