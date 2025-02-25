@@ -15,11 +15,12 @@ import sys
 import webbrowser
 
 KEYBOARD_SHORTCUT = "ctrl+shift+alt"  # Default value; overridden by config later
+
 # Global variables for application state
 state = {
-  'running': True,
-  'restart': False,
-  'input_ready': True
+    'running': True,
+    'restart': False,
+    'input_ready': True
 }
 
 # Load configuration path
@@ -27,41 +28,46 @@ local_appdata = os.getenv('LOCALAPPDATA')
 config_path = os.path.join(local_appdata, 'whisper-dictation', 'config.ini')
 config_dir = os.path.dirname(config_path)
 if not os.path.exists(config_dir):
-  os.makedirs(config_dir)
+    os.makedirs(config_dir)
 
-# Custom icon path for the system tray
-ICON_PATH = "assets/icon.ico"
+# Determine base path based on execution context for both icons and version file
+if hasattr(sys, '_MEIPASS'):
+    base_path = sys._MEIPASS
+else:
+    base_path = os.path.abspath(".")
+
+# Adjust paths for icon and version file
+ICON_PATH = os.path.join(base_path, "assets", "icon.ico")
+local_version_file = os.path.join(base_path, "version.txt")
 
 # Whisper API URL (set globally)
 WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions"
 
 # Repository version file URL
 REPO_VERSION_FILE_URL = "https://raw.githubusercontent.com/jackbrumley/whisper-dictation/main/version.txt"
+
 # GitHub repository URL
 GITHUB_REPO_URL = "https://github.com/jackbrumley/whisper-dictation"
 
 def check_for_updates():
-  # Check the local and repository version files
-  local_version_file = "version.txt"
+    try:
+        # Read the local version
+        with open(local_version_file, 'r') as file:
+            local_version = file.read().strip()
 
-  try:
-    # Read the local version
-    with open(local_version_file, 'r') as file:
-      local_version = file.read().strip()
+        # Fetch the online version
+        response = requests.get(REPO_VERSION_FILE_URL, timeout=5)
+        response.raise_for_status()
+        latest_version = response.text.strip()
 
-    # Fetch the online version
-    response = requests.get(REPO_VERSION_FILE_URL, timeout=5)
-    response.raise_for_status()
-    latest_version = response.text.strip()
-
-    if latest_version != local_version:
-      print(f"A new version is available: {latest_version}. You are using {local_version}.")
-    else:
-      print(f"You are using the latest version: {local_version}.")
-  except FileNotFoundError:
-    print("Local version file not found. Please ensure the 'version' file is included.")
-  except requests.RequestException as e:
-    print(f"Failed to check for updates: {e}")
+        if latest_version != local_version:
+            print(f"A new version is available: {latest_version}. You are using {local_version}.")
+        else:
+            print(f"You are using the latest version: {local_version}.")
+    except FileNotFoundError:
+        print("Local version file not found. Please ensure the 'version.txt' file is included.")
+    except requests.RequestException as e:
+        print(f"Failed to check for updates: {e}")
 
 
 def handle_exit_with_message(message):
