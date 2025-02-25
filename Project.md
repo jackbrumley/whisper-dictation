@@ -130,10 +130,16 @@ project_root/
 │   ├── whisper-dictation.exe
 ```
 
-## Build Command
+## Build Command (Console Present)
 
+```plaintext
+pyinstaller --onefile --icon=assets/icon.ico --add-data "version.txt;." --add-data "assets/icon.ico;assets" --add-data "assets/default_config.ini;assets" main.py
 ```
-pyinstaller --onefile --windowed --icon=assets/icon.ico --add-data "version.txt:." --add-data "assets/icon.ico:assets" main.py
+
+## Build Command (No Console)
+
+```plaintext
+pyinstaller --onefile --windowed --icon=assets/icon.ico --add-data "version.txt;." --add-data "assets/icon.ico;assets" --add-data "assets/default_config.ini;assets" main.py
 ```
 
 
@@ -144,6 +150,7 @@ pyinstaller --onefile --windowed --icon=assets/icon.ico --add-data "version.txt:
 - Add logging.
 - Make tool adaptable so that any voice to text API/model may be used.
 - Add notifications so that you can see the application is running when you execute it and warning messages about the current version.
+- Fix ready to record popup appearing every time, only needs to appear once.
 
 
 ## Credits

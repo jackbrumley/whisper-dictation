@@ -4,6 +4,7 @@ import keyboard
 import threading
 import requests
 import tkinter as tk
+from tkinter import messagebox
 import time
 import pyautogui
 import screeninfo
@@ -14,8 +15,6 @@ from pystray import MenuItem as item
 import sys
 import webbrowser
 
-KEYBOARD_SHORTCUT = "ctrl+shift+alt"  # Default value; overridden by config later
-
 # Global variables for application state
 state = {
     'running': True,
@@ -23,24 +22,9 @@ state = {
     'input_ready': True
 }
 
-# Load configuration path
-local_appdata = os.getenv('LOCALAPPDATA')
-config_path = os.path.join(local_appdata, 'whisper-dictation', 'config.ini')
-config_dir = os.path.dirname(config_path)
-if not os.path.exists(config_dir):
-    os.makedirs(config_dir)
+KEYBOARD_SHORTCUT = "ctrl+shift+alt"  # Default value; overridden by config later
 
-# Determine base path based on execution context for both icons and version file
-if hasattr(sys, '_MEIPASS'):
-    base_path = sys._MEIPASS
-else:
-    base_path = os.path.abspath(".")
-
-# Adjust paths for icon and version file
-ICON_PATH = os.path.join(base_path, "assets", "icon.ico")
-local_version_file = os.path.join(base_path, "version.txt")
-
-# Whisper API URL (set globally)
+# Whisper API URL
 WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions"
 
 # Repository version file URL
@@ -49,10 +33,39 @@ REPO_VERSION_FILE_URL = "https://raw.githubusercontent.com/jackbrumley/whisper-d
 # GitHub repository URL
 GITHUB_REPO_URL = "https://github.com/jackbrumley/whisper-dictation"
 
+# Determine base path based on execution context (script vs binary)
+if hasattr(sys, '_MEIPASS'):
+    base_path = sys._MEIPASS
+else:
+    base_path = os.path.abspath(".")
+
+# Load configuration path
+local_appdata = os.getenv('LOCALAPPDATA')
+config_path = os.path.join(local_appdata, 'whisper-dictation', 'config.ini')
+config_dir = os.path.dirname(config_path)
+if not os.path.exists(config_dir):
+    os.makedirs(config_dir)
+
+#Relative asset paths for building the binary
+icon_file = os.path.join(base_path, "assets", "icon.ico")
+version_file = os.path.join(base_path, "version.txt")
+default_config_file = os.path.join(base_path, "assets", "default_config.ini")
+
+#Show a message box and exit application if told to do so.
+def show_message(message, title="Whisper Dictation", exit_after=False):
+    root = tk.Tk()
+    root.withdraw()
+    
+    messagebox.showinfo(title, message)
+    
+    root.destroy()
+    if exit_after:
+        sys.exit(1)
+
 def check_for_updates():
     try:
         # Read the local version
-        with open(local_version_file, 'r') as file:
+        with open(version_file, 'r') as file:
             local_version = file.read().strip()
 
         # Fetch the online version
@@ -61,9 +74,10 @@ def check_for_updates():
         latest_version = response.text.strip()
 
         if latest_version != local_version:
-            print(f"A new version is available: {latest_version}. You are using {local_version}.")
+          print(f"A new version is available: {latest_version}. You are using {local_version}.")
+          show_message("A new version is available: {latest_version}. You are using {local_version}.", exit_after=False)
         else:
-            print(f"You are using the latest version: {local_version}.")
+         print(f"You are using the latest version: {local_version}.")
     except FileNotFoundError:
         print("Local version file not found. Please ensure the 'version.txt' file is included.")
     except requests.RequestException as e:
@@ -93,7 +107,7 @@ def setup_tray_icon():
     running = False
     icon.stop()
 
-  image = Image.open(ICON_PATH) if os.path.exists(ICON_PATH) else None
+  image = Image.open(icon_file) if os.path.exists(icon_file) else None
   menu = (
     item('Edit Config', open_config_editor),
     item('View GitHub', view_github),
@@ -123,7 +137,6 @@ def main():
 
   # Read or create configuration file
   config = {}
-  default_config_path = "assets/default_config.ini"
   config_created = False
 
 
@@ -135,32 +148,49 @@ def main():
           key, value = map(str.strip, line.split('=', 1))
           config[key] = value
   except FileNotFoundError:
-    if os.path.exists(default_config_path):
-      with open(default_config_path, 'r') as default_config_file, open(config_path, 'w') as new_config_file:
-        new_config_file.write(default_config_file.read())
+    if os.path.exists(default_config_file):
+      with open(default_config_file, 'r') as default_cfg_fp, open(config_path, 'w') as new_cfg_fp:
+        new_cfg_fp.write(default_cfg_fp.read())
       config_created = True
     else:
-      print(f"Default configuration file not found at: {default_config_path}")
-      sys.exit(1)
+      #print(f"Default configuration file not found at: {default_config_file}")
+      #sys.exit(1)
+      show_message("Default configuration file not found at: {default_config_file}", exit_after=True)
 
   print("Configuration file processed.")
 
   # Check for a placeholder API key and warn the user
   WHISPER_API_KEY = config.get('WHISPER_API_KEY', 'your_api_key_here')
   if config_created:
-    message = (
+    #message = (
+    #  f"Config file not found. A default config file has been created at:\n{config_path}\n\n"
+    #  "Right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application."
+    #)
+    #handle_exit_with_message(message)
+    #show_message("Config file not found. A default config file has been created at:\n{config_path}\n\n Right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application.", exit_after=False)
+    show_message(
       f"Config file not found. A default config file has been created at:\n{config_path}\n\n"
-      "Right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application."
+      "Right click the taskbar icon > Edit Config > Insert your OpenAI API Key > "
+      "Save and Close > Relaunch the Application.",
+      exit_after=True
     )
-    handle_exit_with_message(message)
 
   if WHISPER_API_KEY == 'your_api_key_here':
-    message = (
-      f"The API key in the configuration file is set to the default placeholder.\n"
-      f"Please right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application.\n\n"
-      f"Configuration file location: {config_path}"
+    #message = (
+    #  f"The API key in the configuration file is set to the default placeholder.\n"
+    #  f"Please right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application.\n\n"
+    #  f"Configuration file location: {config_path}"
+    #)
+    #handle_exit_with_message(message)
+    #show_message("The API key in the configuration file is set to the default placeholder.\n\nPlease right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application.\n\n Configuration file location: {config_path}", exit_after=True)
+    show_message(
+      f"The API key in the configuration file is set to the default placeholder.\n\n"
+      f"Please right click the taskbar icon > Edit Config > Insert your OpenAI API Key > "
+      f"Save and Close > Relaunch the Application.\n\nConfiguration file location: {config_path}",
+      exit_after=True
     )
-    handle_exit_with_message(message)
+
+    
 
   
   PIXELS_FROM_BOTTOM = int(config.get('PIXELS_FROM_BOTTOM', 100))
@@ -176,12 +206,29 @@ def main():
   print("Starting dictation thread.")
 
   def record_audio():
-    # Records audio and saves it to a temporary file.
     print("Recording audio...")
     audio = pyaudio.PyAudio()
-    stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
-    frames = []
 
+    # Attempt to open the audio input stream
+    try:
+      stream = audio.open(
+        format=FORMAT,
+        channels=CHANNELS,
+        rate=RATE,
+        input=True,
+        frames_per_buffer=CHUNK
+      )
+    except OSError as e:
+      show_message(
+        message=(
+          "No audio input device found or invalid device configuration.\n\n"
+          f"Error details:\n{e}"
+        ),
+        exit_after=False
+      )
+      return
+
+    frames = []
     try:
       while keyboard.is_pressed(KEYBOARD_SHORTCUT):
         data = stream.read(CHUNK)
@@ -212,7 +259,8 @@ def main():
         text = response.json().get("text", "")
         return text
     except Exception as e:
-      print(f"Error during transcription: {e}")
+      #print(f"Error during transcription: {e}")
+      show_message(f"Error during transcription: {e}", exit_after=False)
       return "[Error in transcription]"
     finally:
       if os.path.exists(WAVE_OUTPUT_FILENAME):
@@ -238,8 +286,8 @@ def main():
 
     window.resizable(False, False)
 
-    if os.path.exists(ICON_PATH):
-      window.iconbitmap(ICON_PATH)
+    if os.path.exists(icon_file):
+      window.iconbitmap(icon_file)
 
     label = tk.Label(window, text=status, font=("Segoe UI", 16), bg="white")
     label.pack(expand=True, fill=tk.BOTH)
@@ -252,6 +300,7 @@ def main():
     while state['running']:
       if state['input_ready']:
         print(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording... (You can minimise this window)")
+        show_message(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording...", exit_after=False)
         state['input_ready'] = False
       if keyboard.is_pressed(KEYBOARD_SHORTCUT):
         print("Shortcut detected, starting dictation process...")
