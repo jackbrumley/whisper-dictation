@@ -153,21 +153,13 @@ def main():
         new_cfg_fp.write(default_cfg_fp.read())
       config_created = True
     else:
-      #print(f"Default configuration file not found at: {default_config_file}")
-      #sys.exit(1)
-      show_message("Default configuration file not found at: {default_config_file}", exit_after=True)
+      show_message("Error: Default configuration file not found at: {default_config_file}", exit_after=True)
 
   print("Configuration file processed.")
 
   # Check for a placeholder API key and warn the user
   WHISPER_API_KEY = config.get('WHISPER_API_KEY', 'your_api_key_here')
   if config_created:
-    #message = (
-    #  f"Config file not found. A default config file has been created at:\n{config_path}\n\n"
-    #  "Right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application."
-    #)
-    #handle_exit_with_message(message)
-    #show_message("Config file not found. A default config file has been created at:\n{config_path}\n\n Right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application.", exit_after=False)
     show_message(
       f"Config file not found. A default config file has been created at:\n{config_path}\n\n"
       "Right click the taskbar icon > Edit Config > Insert your OpenAI API Key > "
@@ -176,13 +168,6 @@ def main():
     )
 
   if WHISPER_API_KEY == 'your_api_key_here':
-    #message = (
-    #  f"The API key in the configuration file is set to the default placeholder.\n"
-    #  f"Please right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application.\n\n"
-    #  f"Configuration file location: {config_path}"
-    #)
-    #handle_exit_with_message(message)
-    #show_message("The API key in the configuration file is set to the default placeholder.\n\nPlease right click the taskbar icon > Edit Config > Insert your OpenAI API Key > Save and Close > Relaunch the Application.\n\n Configuration file location: {config_path}", exit_after=True)
     show_message(
       f"The API key in the configuration file is set to the default placeholder.\n\n"
       f"Please right click the taskbar icon > Edit Config > Insert your OpenAI API Key > "
@@ -300,7 +285,6 @@ def main():
     while state['running']:
       if state['input_ready']:
         print(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording... (You can minimise this window)")
-        show_message(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording...", exit_after=False)
         state['input_ready'] = False
       if keyboard.is_pressed(KEYBOARD_SHORTCUT):
         print("Shortcut detected, starting dictation process...")
@@ -331,6 +315,10 @@ def main():
   dictation_thread = threading.Thread(target=dictation_process)
   dictation_thread.daemon = True
   dictation_thread.start()
+  show_message(
+    f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording...",
+    exit_after=False
+  )
 
   try:
     while running:
