@@ -24,7 +24,7 @@ Download the latest version: [Download](https://github.com/jackbrumley/whisper-d
    
    - Launch the executable (`whisper-dictation.exe`) by double-clicking it.
    - In the system tray, right-click the tray icon, and select "Edit Config".
-   - Replace `your_api_key_here` in the `config.ini` file with your OpenAI API key.
+   - Replace `your_api_key_here` in the `config.ini` file with your OpenAI API key and save.
 
 3. **Usage:**
    - The app will sit in your system tray, waiting for you to press the trigger key combination (`CTRL+SHIFT+ALT` by default).
