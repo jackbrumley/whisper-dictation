@@ -114,6 +114,20 @@ If you would like the application to automatically start when you log in:
 - This application works best in environments with a stable microphone setup.
 - Often best used for inputting prompts via voice into ChatGPT for quick iteration and refinement.
 
+
+## File Structure
+
+```plaintext
+project_root/
+├── main.py
+├── version.txt
+├── assets/
+│   ├── default_config.ini
+│   ├── icon.ico
+│   ├── icon256x256.png
+│   └── icon1024x1024.png
+```
+
 ## Credits
 
 Originally forked from:  

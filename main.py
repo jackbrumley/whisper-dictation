@@ -36,13 +36,13 @@ ICON_PATH = "assets/icon.ico"
 WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions"
 
 # Repository version file URL
-REPO_VERSION_FILE_URL = "https://raw.githubusercontent.com/jackbrumley/whisper-dictation/main/version"
+REPO_VERSION_FILE_URL = "https://raw.githubusercontent.com/jackbrumley/whisper-dictation/main/version.txt"
 # GitHub repository URL
 GITHUB_REPO_URL = "https://github.com/jackbrumley/whisper-dictation"
 
 def check_for_updates():
   # Check the local and repository version files
-  local_version_file = "version"
+  local_version_file = "version.txt"
 
   try:
     # Read the local version
