@@ -1,6 +1,6 @@
 # Voice-to-Text Dictation using OpenAI Whisper
 
-A simple voice-to-text dictation app for Windows using OpenAI's Whisper API.
+A simple voice-to-text dictation app for **Windows 10/11** using OpenAI's Whisper API.
 
 ![Voice-to-Text Dictation](assets/icon256x256.png)
 
@@ -10,39 +10,43 @@ Easily convert speech to text in any application using this tool. Ensure you hav
 
 ### Download
 
-Download the latest version: [Download](https://github.com/jackbrumley/whisper-dictation/raw/main/bin/whisper-dictation.exe)
+Latest version: [Download](https://github.com/jackbrumley/whisper-dictation/raw/main/bin/whisper-dictation.exe)
+
 
 ### Setup
 
-1. **OpenAI API Key:**
+1. **Sign up or log in to OpenAI:** Use the links below to access your OpenAI account or create one if you don't have one already: [Sign up](https://platform.openai.com/signup/) | [Log in](https://platform.openai.com/account/api-keys)
 
-   - Sign up on the [OpenAI API page](https://platform.openai.com/signup/) if you don’t have an account.
-   - Generate an API key from the [API Keys section](https://platform.openai.com/account/api-keys) in the OpenAI Dashboard.
-   - Copy the API key.
+2. **Generate an API Key:** In the Dashboard, go to the "API Keys" section and click "Create new secret key".  Copy this key somewhere safe; you'll need it shortly.  *(Important:  Treat your API key like a password. Do not share it publicly.)*
 
-2. **Edit Configuration:**
-   
-   - Launch the executable (`whisper-dictation.exe`) by double-clicking it.
-   - In the system tray, right-click the tray icon, and select "Edit Config".
-   - Replace `your_api_key_here` in the `config.ini` file with your OpenAI API key and save.
+3. **Add Credit to Your Account:** Transcriptions require a small amount of credit.  Go to the "Billing" section of your OpenAI Dashboard. Add a payment method and add credit (even $5 will last a while).
 
-3. **Usage:**
-   - The app will sit in your system tray, waiting for you to press the trigger key combination (`CTRL+SHIFT+ALT` by default).
-   - Hold the trigger keys and speak into your default microphone to start recording.
-   - Release the keys to stop recording and transcribe your speech into text.
+4. **Configure the Application:**
 
-### OpenAI API Key & Credit
+   - **Run the Executable:** Double-click `whisper-dictation.exe` to launch the application.  A notepad document (`config.ini`) will open.
+   - **Enter Your API Key:**  In `config.ini`, find the line `WHISPER_API_KEY = your_api_key_here`. Replace `your_api_key_here` with the API key you copied earlier.
+   - **Save the Configuration:** Save the `config.ini` file and close it.
+   - **Relaunch the App:** Close and reopen `whisper-dictation.exe` for the changes to take effect.
 
-- **API Key:** Ensure your API key is entered in the configuration file.
-- **Credits:** The tool requires credit on your OpenAI account for transcriptions. You can manage credits in the Billing section of the OpenAI Dashboard. Note: Costs are minimal and $5 USD can last weeks.
 
-### Run at Startup
+5. **Start Using Voice-to-Text:**
 
-To have the application start automatically when logging in:
+   - **The App Runs in the System Tray:** After launching, the app icon will appear in the system tray (bottom-right corner of your screen, near the clock).
+   - **Trigger Dictation:** The default trigger key combination is `CTRL+SHIFT+ALT`. Hold down these keys and start speaking into your microphone.
+   - **Stop Dictation:** Release the `CTRL+SHIFT+ALT` keys to stop recording.  The app will send your voice to OpenAI for transcription, and the transcribed text will appear where your cursor is active. 
 
-1. Right-click `whisper-dictation.exe` and select **Create Shortcut**.
-2. Open the Run dialog (`Win + R`), type `shell:startup`, and press Enter.
-3. Move the shortcut to the opened Startup folder.
+
+
+### Autorun at Startup/Login
+
+To have the application start automatically when your login to Windows:
+
+1. **Open the Run dialog** (`Win + R`), type `shell:startup`, and press **Enter**.
+2. **Right-click** in the folder and select **New > Shortcut**.
+3. **Browse to** wherever you are storing your **whisper-dictation.exe** file and click next.
+4. Give the shortcut file and name and click **Finish**.
+
+The application should now start automatically when your reboot your computer and login.
 
 ## More Details
 
