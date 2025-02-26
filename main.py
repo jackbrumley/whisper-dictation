@@ -1,3 +1,4 @@
+import subprocess
 import pyaudio
 import wave
 import keyboard
@@ -52,36 +53,32 @@ version_file = os.path.join(base_path, "version.txt")
 default_config_file = os.path.join(base_path, "assets", "default_config.ini")
 
 #Show a message box and exit application if told to do so.
-def show_message(message, title="Whisper Dictation", exit_after=False):
-    root = tk.Tk()
-    root.withdraw()
-    
-    messagebox.showinfo(title, message)
-    
-    root.destroy()
-    if exit_after:
-        sys.exit(1)
+def show_message(message, title="Whisper Dictation"):
+  root = tk.Tk()
+  root.withdraw()
+  messagebox.showinfo(title, message)
+  root.destroy()
 
 def check_for_updates():
-    try:
-        # Read the local version
-        with open(version_file, 'r') as file:
-            local_version = file.read().strip()
+  try:
+    # Read the local version
+    with open(version_file, 'r') as file:
+        local_version = file.read().strip()
 
-        # Fetch the online version
-        response = requests.get(REPO_VERSION_FILE_URL, timeout=5)
-        response.raise_for_status()
-        latest_version = response.text.strip()
+    # Fetch the online version
+    response = requests.get(REPO_VERSION_FILE_URL, timeout=5)
+    response.raise_for_status()
+    latest_version = response.text.strip()
 
-        if latest_version != local_version:
-          print(f"A new version is available: {latest_version}. You are using {local_version}.")
-          show_message("A new version is available: {latest_version}. You are using {local_version}.", exit_after=False)
-        else:
-         print(f"You are using the latest version: {local_version}.")
-    except FileNotFoundError:
-        print("Local version file not found. Please ensure the 'version.txt' file is included.")
-    except requests.RequestException as e:
-        print(f"Failed to check for updates: {e}")
+    if latest_version != local_version:
+      print(f"A new version is available: {latest_version}. You are using {local_version}.")
+      show_message("A new version is available: {latest_version}. You are using {local_version}.", exit_after=False)
+    else:
+      print(f"You are using the latest version: {local_version}.")
+  except FileNotFoundError:
+    print("Local version file not found. Please ensure the 'version.txt' file is included.")
+  except requests.RequestException as e:
+    print(f"Failed to check for updates: {e}")
 
 
 def handle_exit_with_message(message):
@@ -161,22 +158,20 @@ def main():
   WHISPER_API_KEY = config.get('WHISPER_API_KEY', 'your_api_key_here')
   if config_created:
     show_message(
-      f"Config file not found. A default config file has been created at:\n{config_path}\n\n"
-      "Right click the taskbar icon > Edit Config > Insert your OpenAI API Key > "
-      "Save and Close > Relaunch the Application.",
-      exit_after=True
+      f"Config file not found. A default config file has been created.\n{config_path}\n\n"
+      "Please insert your OpenAI API Key, save and then relaunch the Application."
     )
+    subprocess.Popen(['notepad.exe', config_path])
+    sys.exit(1)
 
   if WHISPER_API_KEY == 'your_api_key_here':
-    show_message(
-      f"The API key in the configuration file is set to the default placeholder.\n\n"
-      f"Please right click the taskbar icon > Edit Config > Insert your OpenAI API Key > "
-      f"Save and Close > Relaunch the Application.\n\nConfiguration file location: {config_path}",
-      exit_after=True
-    )
-
     
-
+    show_message(
+      f"The API key in the configuration file is set to the default placeholder.\n{config_path}\n\n"
+      "Please insert your OpenAI API Key, save, and then relaunch the Application."
+    )
+    subprocess.Popen(['notepad.exe', config_path])
+    sys.exit(1)
   
   PIXELS_FROM_BOTTOM = int(config.get('PIXELS_FROM_BOTTOM', 100))
   KEYBOARD_SHORTCUT = config.get('KEYBOARD_SHORTCUT', 'ctrl+shift+alt')
@@ -245,7 +240,7 @@ def main():
         return text
     except Exception as e:
       #print(f"Error during transcription: {e}")
-      show_message(f"Error during transcription: {e}", exit_after=False)
+      show_message(f"Error during transcription: {e}")
       return "[Error in transcription]"
     finally:
       if os.path.exists(WAVE_OUTPUT_FILENAME):
@@ -315,10 +310,7 @@ def main():
   dictation_thread = threading.Thread(target=dictation_process)
   dictation_thread.daemon = True
   dictation_thread.start()
-  show_message(
-    f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording...",
-    exit_after=False
-  )
+  show_message(f"Waiting for input. Press and hold {KEYBOARD_SHORTCUT} to start recording...")
 
   try:
     while running:
