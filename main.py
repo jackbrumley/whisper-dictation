@@ -56,6 +56,11 @@ default_config_file = os.path.join(base_path, "assets", "default_config.ini")
 def show_message(message, title="Whisper Dictation"):
   root = tk.Tk()
   root.withdraw()
+
+
+  if os.path.exists(icon_file):
+    root.iconbitmap(icon_file)
+
   messagebox.showinfo(title, message)
   root.destroy()
 
@@ -72,7 +77,7 @@ def check_for_updates():
 
     if latest_version != local_version:
       print(f"A new version is available: {latest_version}. You are using {local_version}.")
-      show_message("A new version is available: {latest_version}. You are using {local_version}.", exit_after=False)
+      show_message(f"A new version is available: {latest_version}. You are using {local_version}.")
     else:
       print(f"You are using the latest version: {local_version}.")
   except FileNotFoundError:
@@ -150,26 +155,21 @@ def main():
         new_cfg_fp.write(default_cfg_fp.read())
       config_created = True
     else:
-      show_message("Error: Default configuration file not found at: {default_config_file}", exit_after=True)
+      show_message(f"Error: Default configuration file not found at: {default_config_file}")
+      sys.exit(1)
 
   print("Configuration file processed.")
 
   # Check for a placeholder API key and warn the user
   WHISPER_API_KEY = config.get('WHISPER_API_KEY', 'your_api_key_here')
   if config_created:
-    show_message(
-      f"Config file not found. A default config file has been created.\n{config_path}\n\n"
-      "Please insert your OpenAI API Key, save and then relaunch the Application."
-    )
+    show_message(f"Config file not found. A default config file has been created.\n{config_path}\n\nPlease insert your OpenAI API Key, save and then relaunch the Application.")
     subprocess.Popen(['notepad.exe', config_path])
     sys.exit(1)
 
   if WHISPER_API_KEY == 'your_api_key_here':
     
-    show_message(
-      f"The API key in the configuration file is set to the default placeholder.\n{config_path}\n\n"
-      "Please insert your OpenAI API Key, save, and then relaunch the Application."
-    )
+    show_message(f"The API key in the configuration file is set to the default placeholder.\n{config_path}\n\nPlease insert your OpenAI API Key, save, and then relaunch the Application.")
     subprocess.Popen(['notepad.exe', config_path])
     sys.exit(1)
   
@@ -199,13 +199,7 @@ def main():
         frames_per_buffer=CHUNK
       )
     except OSError as e:
-      show_message(
-        message=(
-          "No audio input device found or invalid device configuration.\n\n"
-          f"Error details:\n{e}"
-        ),
-        exit_after=False
-      )
+      show_message(f"No audio input device found or invalid device configuration.\n\nError details:\n{e}")
       return
 
     frames = []
