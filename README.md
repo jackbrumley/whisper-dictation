@@ -4,9 +4,8 @@ A simple voice-to-text dictation app for **Windows 10/11** using OpenAI's Whispe
 
 ![Voice-to-Text Dictation](assets/icon256x256.png)
 
-While the built-in Windows 10/11 Voice Typing tool provides basic functionality, its accuracy can be inconsistent. This project aimed to create a superior solution—a system-wide voice-to-text application capable of transcribing speech within any text box. Key goals included simplicity, affordability, and reliability. Commercial alternatives, such as Dragon Naturally Speaking, offer robust features but often come with a high price tag.
+The built-in Windows 10/11 Voice Typing tool has limitations in accuracy. This project developed a Python-based, **system-wide, voice-to-text application that integrates with any text input field**, enabling dictation in various applications such as email clients, word processors, web browsers, and code editors. It offers a realiable low cost, pay as you go alternative to commercial software like Dragon Naturally speaking which often come with a high price tag. This application uses the OpenAI Whisper API to provide system-wide voice dictation with functionality comparable to the built-in Windows tool, while being significantly more accuracy and reliabile while remaining low cost.
 
-OpenAI's Whisper model, renowned for its accuracy and utilized in features like voice input for ChatGPT's mobile app, offers a compelling alternative through its readily available and cost-effective API. This application uses the Open AI Whisper API to deliver accurate, affordable, and system-wide voice dictation on Windows that is functionally the same as the built-in Windows 10/11 Voice Typing tool but far more accurate and reliable. 
 
 ## Download
 
